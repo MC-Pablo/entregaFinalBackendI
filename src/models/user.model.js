@@ -1,6 +1,8 @@
 import { Schema, model } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
-const studentSchema = new Schema({
+
+const userSchema = new Schema({
     name: {
         type: String,
         required: [ true, "El nombre es obligatorio" ],
@@ -25,7 +27,7 @@ const studentSchema = new Schema({
         match: [ /^[a-z0-9.]+@[a-z0-9-]+.(com$|com.[a-z0-9]{2}$)/, "El email es inválido" ],
         validate: {
             validator: async function (email) {
-                const countDocuments = await this.model("students").countDocuments({
+                const countDocuments = await this.model("users").countDocuments({
                     _id: { $ne: this._id },
                     email,
                 });
@@ -39,8 +41,21 @@ const studentSchema = new Schema({
         required: [ true, "La imagen es obligatoria" ],
         trim: true,
     },
+    cart: [{
+        type: Schema.Types.ObjectId,
+        ref: "carts",
+    }],
+}, {
+    timestamps: true, // Añade timestamps para generar createdAt y updatedAt
 });
 
-const StudentModel = model("students", studentSchema);
+// Índice compuesto para nombre y apellido
+userSchema.index({ name: 1, surname: 1 }, { name: "idx_name_surname" });
 
-export default StudentModel;
+// Agrega mongoose-paginate-v2 para habilitar las funcionalidades de paginación.
+userSchema.plugin(paginate);
+
+
+const UserModel = model("users", userSchema);
+
+export default UserModel;
