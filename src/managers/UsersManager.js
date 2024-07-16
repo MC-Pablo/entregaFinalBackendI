@@ -15,14 +15,35 @@ export default class UsersManager {
     this.#userModel = UserModel;
   }
 
-  getAll = async () => {
+  getAll = async (paramFilters) => {
     try {
-      const usersFound = await this.#userModel.find().lean();
-      return usersFound;
+        const $and = [];
+
+        if (paramFilters?.name) $and.push({ name:  paramFilters.name });
+        if (paramFilters?.surname) $and.push({ surname:  paramFilters.surname });
+        if (paramFilters?.email) $and.push({ email:  paramFilters.email });
+        const filters = $and.length > 0 ? { $and } : {};
+
+        const sort = {
+            asc: { name: 1 },
+            desc: { name: -1 },
+        };
+
+        const paginationOptions = {
+            limit: paramFilters.limit ?? 10,
+            page: paramFilters.page ?? 1,
+            sort: sort[paramFilters?.sort] ?? {},
+            populate: "products",
+            lean: true,
+        };
+
+        const usersFound = await this.#userModel.paginate(filters, paginationOptions);
+        console.log(usersFound);
+        return usersFound;
     } catch (error) {
-      throw new Error(error.message);
+        throw new Error(error.message);
     }
-  };
+};
 
   getOneById = async (id) => {
     try {
@@ -30,7 +51,7 @@ export default class UsersManager {
         throw new Error(ERROR_INVALID_ID);
       }
 
-      const userFound = await this.#userModel.findById(id);
+      const userFound = await this.#userModel.findById(id).populate("products");
 
       if (!userFound) {
         throw new Error(ERROR_NOT_FOUND_ID);
