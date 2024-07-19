@@ -1,0 +1,24 @@
+<section>
+    <h1>Listado de productos</h1>
+    <a href="/realTimeProducts" class="btn btn-primary">Administrar productos</a>
+    <div class="d-flex">
+        {{#each products.docs}}
+        <div class="card" style="width: 18rem;">
+            <img class="thumbnail" src="http://localhost:8080/public/img/{{this.thumbnail}}"
+                alt="localhost:8080/public/img/{{this.thumbnail}}" height="100px">
+            <div class="card-body">
+                <h5 class="card-title">Nombre:{{this.name}}</h5>
+                <p class="card-text">Id: {{this._id}}</p>
+                <p class="card-text">Marca: {{this.brand}}</p>
+                <p class="card-text">Descripcion: {{this.description}}</p>
+                <p class="card-text">Precio: {{this.price}}</p>
+                <p class="card-text">Stock: {{this.stock}}</p>
+                
+
+                <a href="/product/{{this._id}}" class="btn btn-primary">Ver</a>
+                <a href="/cart" class="btn btn-primary">Agregar o quitar del carrito</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>

@@ -1,0 +1,58 @@
+{
+  "products": [
+    {
+      "category": "cremas hidratantes",
+      "name": "Crema hidratante para tatuajes Tattoo Goo",
+      "description": "Crema hidratante rica en vitaminas y minerales que ayuda a mantener la piel tatuada sana y vibrante.",
+      "brand": "Tattoo Goo",
+      "price": 2000,
+      "stock": true,
+      "thumbnail": "https://tattoogoo.com/shop/tattoo-goo-lotion/"
+    },
+    {
+      "category": "cremas hidratantes",
+      "name": "Crema hidratante para tatuajes Hustle Butter Deluxe",
+      "description": "Crema hidratante ligera y no grasa que absorbe rápidamente y deja la piel suave y flexible.",
+      "brand": "Hustle Butter Deluxe",
+      "price": 1800,
+      "stock": false,
+      "thumbnail": "https://www.hustlebutter.com/hustle-butter-deluxe-5-oz"
+    },
+    {
+      "category": "jabones",
+      "name": "Jabón para tatuajes Green Frog Botanicals",
+      "description": "Jabón suave y natural hecho con ingredientes botánicos que limpian los tatuajes sin resecar la piel.",
+      "brand": "Green Frog Botanicals",
+      "price": 1200,
+      "stock": true,
+      "thumbnail": "https://www.facebook.com/greenfrogbotanic/"
+    },
+    {
+      "category": "jabones",
+      "name": "Jabón para tatuajes H2O Tattoo Care",
+      "description": "Jabón sin fragancias ni parabenos que limpia suavemente los tatuajes y ayuda a mantener los colores vibrantes.",
+      "brand": "H2O Tattoo Care",
+      "price": 1500,
+      "stock": false,
+      "thumbnail": "https://h2ocean.com/tattoo-aftercare/"
+    },
+    {
+      "category": "protectores solares",
+      "name": "Protector solar para tatuajes Ink Armor SPF 50+",
+      "description": "Protector solar resistente al agua y al sudor que protege los tatuajes de los rayos UV dañinos.",
+      "brand": "Ink Armor",
+      "price": 2500,
+      "stock": true,
+      "thumbnail": "https://tat2x.com/collections/tattoo-cover-up-sleeves"
+    },
+    {
+      "category": "protectores solares",
+      "name": "Protector solar para tatuajes Banana Boat Sport SPF 50+",
+      "description": "Protector solar de amplio espectro que protege los tatuajes de los rayos UVA y UVB.",
+      "brand": "Banana Boat",
+      "price": 2200,
+      "stock": false,
+      "thumbnail": "https://www.bananaboat.com/products/banana-boat-sport-ultra-lotion-spf-50?bvstate=pg:2/ct:r"
+    }
+  ]
+}

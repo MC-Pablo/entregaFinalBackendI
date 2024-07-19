@@ -4,6 +4,8 @@ import mongoDB from "./config/mongoose.config.js";
 import handlebars from "./config/handlebars.config.js";
 import appUsersRouter from "./routes/app.users.router.js";
 import apiUsersRouter from "./routes/api.users.router.js";
+import appProductsRouter from "./routes/app.products.js";
+import apiProductsRouter from "./routes/api.products.router.js";
 import { ERROR_SERVER, ERROR_NOT_FOUND_URL } from "./constants/messages.constant.js";
 
 const server = express();
@@ -22,6 +24,8 @@ server.use("/public", express.static(paths.public));
 // Definición de enrutadores
 server.use("/users", appUsersRouter);
 server.use("/api/users", apiUsersRouter);
+server.use("/products", appProductsRouter);
+server.use("/api/products", apiProductsRouter);
 
 // Control de rutas inexistentes
 server.use("*", (req, res) => {

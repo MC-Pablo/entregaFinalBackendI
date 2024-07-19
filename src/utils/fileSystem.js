@@ -1,16 +1,31 @@
 import fs from "fs";
-import paths from "./paths.js";
+import path from "path";
 
-const deleteImage = async (filename) => {
-    const filepath = `${paths.images}/${filename}`;
+export default class FileSystem {
+    read = async (filepath, filename) => {
+        if (!filepath) throw new Error("Lectura. No has enviado la ruta del archivo");
+        if (!filename) throw new Error("Lectura. No has enviado el nombre del archivo");
 
-    try {
-        await fs.promises.unlink(filepath);
-    } catch (error) {
-        console.log(`No existe el archivo ${filename}`);
-    }
-};
+        const content = await fs.promises.readFile(path.join(filepath, filename));
+        return content;
+    };
 
-export default {
-    deleteImage,
-};
+    write = async (filepath, filename, content) => {
+        if (!filepath) throw new Error("Escritura. No has enviado la ruta del archivo");
+        if (!filename) throw new Error("Escritura. No has enviado el nombre del archivo");
+        if (!content) throw new Error("Escritura. No has enviado contenido");
+
+        return await fs.promises.writeFile(path.join(filepath, filename), content);
+    };
+
+    delete = async (filepath, filename) => {
+        if (!filepath) throw new Error("Eliminación. No has enviado la ruta del archivo");
+        if (!filename) throw new Error("Eliminación. No has enviado el nombre del archivo");
+
+        try {
+            return await fs.promises.unlink(path.join(filepath, filename));
+        } catch (error) {
+            console.log("Eliminación. No existe el archivo");
+        }
+    };
+}

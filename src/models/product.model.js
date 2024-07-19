@@ -23,29 +23,48 @@ const productSchema = new Schema({
   category: {
     type: String,
     required: true,
+    enum: [
+      "cremas hidratantes",
+      "jabones",
+      "protectores solares",
+    ],
   },
-  image: {
+  thumbnail: {
     type: String,
     required: true,
-    format: "uri",
+    trim: true,
   },
   stock: {
-    type: Number,
+    type: Boolean,
     required: true,
   },
-
-  category: [{
-    type: Schema.Types.ObjectId,
-    ref: "categories",
-}],
-
 
 }, {
     timestamps: true, // Añade timestamps para generar createdAt y updatedAt
+},
+{toJSON: { virtuals: true }});
+
+
+productSchema.virtual("carts", {
+  ref: "carts", // Nombre de la collection externa
+  localField: "_id", // Nombre del campo de referencia que esta en esta collection
+  foreignField: "products", // Nombre del campo de referencia que está en la collection externa
+  justOne: false,
 });
+
+productSchema.pre("findByIdAndDelete", async function(next) {
+  const cartModel = this.model("cart");
+
+  await cartModel.updateMany(
+      { carts: this._id },
+      { $pull: { carts: this._id } },
+  );
+
+  next();
+});
+
+productSchema.plugin(paginate);
 
 
 const ProductModel = model("products", productSchema);
-
 export default ProductModel;
-

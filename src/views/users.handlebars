@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios</title>
+  </head>
+<body>
+  <h1>Usuarios de compra</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo electrónico</th>
+        <th>Imagen</th>
+        <th>Carrito de compra</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each users}}
+      <tr>
+        <td>{{this.name}}</td>
+        <td>{{this.surname}}</td>
+        <td>{{this.email}}</td>
+        <td>{{this.thumbnail}}</td>
+        <td></td>
+        <td>
+          <a href="/users/{{this._id}}/edit">Editar</a>
+          <button data-id="{{this._id}}">Eliminar</button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
