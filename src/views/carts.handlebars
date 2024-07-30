@@ -1,0 +1,16 @@
+<section>
+  <h1 >Carritos</h1>
+  <div >
+    {{#each carts}}
+      <article>
+        <div>
+          <div >Id del carrito: {{this._id}}</div>
+          {{#each products}}
+            <div >Id del producto: {{this.id._id}}</div>
+            <div >Cantidad: {{this.quantity}}</div>
+          {{/each}}
+        </div>
+      </article>
+    {{/each}}
+  </div>
+</section>

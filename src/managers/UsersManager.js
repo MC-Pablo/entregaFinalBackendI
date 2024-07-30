@@ -30,8 +30,8 @@ export default class UsersManager {
         };
 
         const paginationOptions = {
-            limit: paramFilters.limit ?? 10,
-            page: paramFilters.page ?? 1,
+            limit: paramFilters?.limit ?? 10,
+            page: paramFilters?.page ?? 1,
             sort: sort[paramFilters?.sort] ?? {},
             populate: "products",
             lean: true,

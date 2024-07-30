@@ -1,144 +1,155 @@
-
-import mongoose from "mongoose";
 import ProductModel from "../models/product.model.js";
 import mongoDB from "../config/mongoose.config.js";
-import FileSystem from "../utils/fileSystem.js"
-import paths from "../utils/paths.js";
-import { convertToBoolean } from "../utils/converter.js";
-import {
-    ERROR_INVALID_ID,
-    ERROR_NOT_FOUND_ID,
-} from "../constants/messages.constant.js";
 
-export default class IngredientManager {
-    #productModel;
-    #fileSystem;
+export default class ProductManager {
+  #itemModel;
 
-    constructor () {
-        this.#productModel = ProductModel;
-        this.#fileSystem = new FileSystem();
+  constructor() {
+    this.#itemModel = ProductModel;
+  }
+
+  getAll = async (paramFilters) => {
+    try {
+      const $and = [];
+
+      if (paramFilters?.category)
+        $and.push({ category: paramFilters.category });
+      if (paramFilters?.title) $and.push({ title: paramFilters.title });
+      if (paramFilters?.code) $and.push({ code: paramFilters.code });
+      if (paramFilters?.available)
+        $and.push({ available: paramFilters.available });
+
+      const filters = $and.length > 0 ? { $and } : {};
+
+      let sort = {};
+      if (
+        paramFilters?.sort &&
+        (paramFilters.sort === "asc" || paramFilters.sort === "desc")
+      ) {
+        sort = {
+          price: paramFilters.sort === "desc" ? -1 : 1,
+        };
+      }
+
+      const defaultLimit = 10;
+      const defaultPage = 1;
+
+      const skip =
+        (paramFilters?.page
+          ? parseInt(paramFilters.page) - 1
+          : defaultPage - 1) *
+        (paramFilters?.limit ? parseInt(paramFilters.limit) : defaultLimit);
+
+      const paginationOptions = {
+        limit: paramFilters?.limit
+          ? parseInt(paramFilters.limit)
+          : defaultLimit,
+        page: paramFilters?.page ? parseInt(paramFilters.page) : defaultPage,
+        sort: sort,
+        skip: skip,
+        lean: true,
+      };
+
+      const productsFound = await this.#itemModel.paginate(
+        filters,
+        paginationOptions
+      );
+
+      // Remove the 'id' field from each product in the results
+      productsFound.docs = productsFound.docs.map((product) => {
+        const { id, ...productWithoutId } = product;
+        console.log(id);
+        return productWithoutId;
+      });
+
+      return { productsFound, skip };
+    } catch (error) {
+      console.log(error.message);
+      return "Hubo un error al obtener los productos";
     }
+  };
+  
 
-    getAll = async (paramFilters) => {
-        try {
-            const $and = [];
+  getOneById = async (id) => {
+    if (!mongoDB.isValidId(id)) {
+      return null;
+    }
+    try {
+      const product = await this.#itemModel.findById(id);
+      if (!product) {
+        return null;
+      }
+      return product;
+    } catch (error) {
+      console.log(error.message);
+      return "Hubo un error al obtener el producto";
+    }
+  };
 
-            if (paramFilters?.name) $and.push({ name: { $regex: paramFilters.name, $options: "i" } });
-            if (paramFilters?.category) $and.push({ category: paramFilters.category });
-            if (paramFilters?.stock) $and.push({ stock: convertToBoolean(paramFilters.stock) });
-            const filters = $and.length > 0 ? { $and } : {};
+  deleteOneById = async (id) => {
+    if (!mongoDB.isValidId(id)) {
+      return null;
+    }
+    try {
+      await this.#itemModel.findByIdAndDelete(id);
+      return "Producto Eliminado";
+    } catch (error) {
+      console.log(error.message);
+      return "Hubo un error al eliminar el producto";
+    }
+  };
 
-            const sort = {
-                asc: { name: 1 },
-                desc: { name: -1 },
-            };
+  addProduct = async ({
+    category,
+    name,
+    description,
+    price,
+    thumbnail = [],
+    stock,
+  }) => {
+    if (!category || !name || !description || !price || !stock) {
+      console.log("Todos los campos son obligatorios");
+    }
+    const products = await this.#itemModel.find().lean();
+    try {
+      const product = new this.#itemModel({
+        category,
+        name,
+        description,
+        price,
+        thumbnail,
+        stock,
+      });
+      const sameCode = products.find((product) => product.code === code);
+      if (sameCode) {
+        return "El codigo ya existe";
+      }
+      await product.save();
+      return "Producto agregado correctamente";
+    } catch (error) {
+      console.log(error.message);
+      return "Hubo un error al agregar el producto";
+    }
+  };
 
-            const paginationOptions = {
-                limit: paramFilters?.limit ?? 5,
-                page: paramFilters?.page ?? 1,
-                sort: sort[paramFilters?.sort] ?? {},
-                lean: true,
-            };
-
-            const productsFound = await this.#productModel.paginate(filters, paginationOptions);
-            return productsFound;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    };
-
-    getOneById = async (id) => {
-        try {
-            if (!mongoDB.isValidID(id)) {
-                throw new Error(ERROR_INVALID_ID);
-            }
-
-            const productFound = await this.#productModel.findById(id).lean();
-
-            if (!productFound) {
-                throw new Error(ERROR_NOT_FOUND_ID);
-            }
-
-            return productFound;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    };
-
-    insertOne = async (data, filename) => {
-        try {
-            const productCreated = new ProductModel(data);
-            productCreated.stock = convertToBoolean(data.stock);
-            productCreated.thumbnail = filename ?? null;
-            await productCreated.save();
-
-            return productCreated;
-        } catch (error) {
-            if (filename) await this.#fileSystem.delete(paths.images, filename);
-
-            if (error instanceof mongoose.Error.ValidationError) {
-                error.message = Object.values(error.errors)[0];
-            }
-
-            throw new Error(error.message);
-        }
-    };
-
-    updateOneById = async (id, data, filename) => {
-        try {
-            if (!mongoDB.isValidID(id)) {
-                throw new Error(ERROR_INVALID_ID);
-            }
-
-            const productFound = await this.#productModel.findById(id);
-            const currentThumbnail = productFound.thumbnail;
-            const newThumbnail = filename;
-
-            if (!productFound) {
-                throw new Error(ERROR_NOT_FOUND_ID);
-            }
-
-            productFound.name = data.name;
-            productFound.description = data.description;
-            productFound.category = data.category;
-            productFound.stock = convertToBoolean(data.stock);
-            productFound.thumbnail = newThumbnail ?? currentThumbnail;
-            await productFound.save();
-
-            if (filename && newThumbnail != currentThumbnail) {
-                await this.#fileSystem.delete(paths.images, currentThumbnail);
-            }
-
-            return productFound;
-        } catch (error) {
-            if (filename) await this.#fileSystem.delete(paths.images, filename);
-
-            if (error instanceof mongoose.Error.ValidationError) {
-                error.message = Object.values(error.errors)[0];
-            }
-
-            throw new Error(error.message);
-        }
-    };
-
-    deleteOneById = async (id) => {
-        try {
-            if (!mongoDB.isValidID(id)) {
-                throw new Error(ERROR_INVALID_ID);
-            }
-
-            const productFound = await this.#productModel.findById(id);
-
-            if (!productFound) {
-                throw new Error(ERROR_NOT_FOUND_ID);
-            }
-
-            await this.#productModel.findByIdAndDelete(id);
-            await this.#fileSystem.delete(paths.images, productFound.thumbnail);
-
-            return productFound;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    };
+  updateProduct = async (id, updateData) => {
+    if (!mongoDB.isValidId(id)) {
+      return null;
+    }
+    try {
+      const updatedProduct = await this.#itemModel.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true }
+      );
+      if (updatedProduct) {
+        return "Producto Modificado";
+      } else {
+        return "Producto no encontrado";
+      }
+    } catch (error) {
+      console.log(error.message);
+      return "Hubo un error al actualizar el producto";
+    }
+  };
 }

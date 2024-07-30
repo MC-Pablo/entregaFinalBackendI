@@ -1,24 +1,41 @@
-<section>
-    <h1>Listado de productos</h1>
-    <a href="/realTimeProducts" class="btn btn-primary">Administrar productos</a>
-    <div class="d-flex">
-        {{#each products.docs}}
-        <div class="card" style="width: 18rem;">
-            <img class="thumbnail" src="http://localhost:8080/public/img/{{this.thumbnail}}"
-                alt="localhost:8080/public/img/{{this.thumbnail}}" height="100px">
-            <div class="card-body">
-                <h5 class="card-title">Nombre:{{this.name}}</h5>
-                <p class="card-text">Id: {{this._id}}</p>
-                <p class="card-text">Marca: {{this.brand}}</p>
-                <p class="card-text">Descripcion: {{this.description}}</p>
-                <p class="card-text">Precio: {{this.price}}</p>
-                <p class="card-text">Stock: {{this.stock}}</p>
-                
-
-                <a href="/product/{{this._id}}" class="btn btn-primary">Ver</a>
-                <a href="/cart" class="btn btn-primary">Agregar o quitar del carrito</a>
-            </div>
+<section class="products__table">
+  <h1 class="titulo">Listado de productos</h1>
+  <div class="table__categories">
+    {{#each products.productsFound.docs}}
+      
+      <article class="categories__item">
+        <div class="item__foto">
+          <div><a href={{this.thumbnail.[0]}} target="_blank"><img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}}></a></div>
         </div>
-        {{/each}}
+        <div class="item__texto">
+          <div class="id">Id: {{this._id}}</div>         
+          <div class="category">Categoria: {{this.category}}</div>
+            <div class="brand">Marca: {{this.brand}}</div>
+          <div class="title">Nombre: {{this.title}}</div>
+          <div class="price">Precio: {{this.price}}</div>
+          <div class="stock">Stock: {{this.stock}}</div>
+          <a href="http://localhost:8080/products/{{this._id}}" target="_blank">
+            <button>Ver detalles</button>
+          </a>
+        </div>
+      </article>
+      
+    {{/each}}
+  </div>
+    <div>
+      {{#if products.productsFound.prevPage}}
+      <a href="/products?page={{products.productsFound.prevPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Anterior</a>
+      {{/if}}
+      {{#if products.productsFound.nextPage}}
+      <a href="/products?page={{products.productsFound.nextPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Siguiente</a>
+      {{/if}}
+    </div>
+    <div>
+      <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">Ascendente</a>
+      <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">Descendente</a>
+    </div>
+    <div class="listadoInfoProducts">
+        <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}">Reset</a>
+        <p><span>Página {{products.productsFound.page}} de {{products.productsFound.totalPages}}</span>, <span>{{products.productsFound.totalDocs}} Documentos</span> y <span>{{products.skip}} Omitidos</span></p>
     </div>
 </section>

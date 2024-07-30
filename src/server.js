@@ -6,6 +6,8 @@ import appUsersRouter from "./routes/app.users.router.js";
 import apiUsersRouter from "./routes/api.users.router.js";
 import appProductsRouter from "./routes/app.products.js";
 import apiProductsRouter from "./routes/api.products.router.js";
+import homeRouter from "./routes/home.router.js";
+import appCartRouter from "./routes/app.cart.router.js";
 import { ERROR_SERVER, ERROR_NOT_FOUND_URL } from "./constants/messages.constant.js";
 
 const server = express();
@@ -22,10 +24,12 @@ handlebars.config(server);
 server.use("/public", express.static(paths.public));
 
 // Definición de enrutadores
+server.use("/", homeRouter);
 server.use("/users", appUsersRouter);
 server.use("/api/users", apiUsersRouter);
 server.use("/products", appProductsRouter);
 server.use("/api/products", apiProductsRouter);
+server.use("/carts", appCartRouter);
 
 // Control de rutas inexistentes
 server.use("*", (req, res) => {
