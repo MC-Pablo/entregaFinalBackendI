@@ -1,7 +1,16 @@
-<section class="products__table">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../public/css/products.css">
+  <title>Productos</title>
+</head>
+<body>
+  <section class="products__table">
   <h1 class="titulo">Listado de productos</h1>
   <div class="table__categories">
-    {{#each products.productsFound.docs}}
+    {{#each products.docs}}
       
       <article class="categories__item">
         <div class="item__foto">
@@ -10,14 +19,15 @@
         <div class="item__texto">
           <div class="id">Id: {{this._id}}</div>         
           <div class="category">Categoria: {{this.category}}</div>
-            <div class="brand">Marca: {{this.brand}}</div>
-          <div class="title">Nombre: {{this.title}}</div>
+          <div class="brand">Marca: {{this.brand}}</div>
+          <div class="title">Nombre: {{this.name}}</div>
           <div class="price">Precio: {{this.price}}</div>
           <div class="stock">Stock: {{this.stock}}</div>
           <a href="http://localhost:8080/products/{{this._id}}" target="_blank">
             <button>Ver detalles</button>
           </a>
         </div>
+        <a href="/" class="btn btn-primary">Volver a inicio</a>
       </article>
       
     {{/each}}
@@ -38,4 +48,9 @@
         <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}">Reset</a>
         <p><span>Página {{products.productsFound.page}} de {{products.productsFound.totalPages}}</span>, <span>{{products.productsFound.totalDocs}} Documentos</span> y <span>{{products.skip}} Omitidos</span></p>
     </div>
+        <a href="/" class="btn btn-primary">Volver a inicio</a>
 </section>
+
+  
+</body>
+</html>

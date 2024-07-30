@@ -1,0 +1,100 @@
+/* General styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+h1.titulo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.products__table {
+  border-collapse: collapse;
+  width: 100%; /* Makes the table fill the available width */
+}
+
+/* Categories table styles */
+.table__categories {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap onto multiple lines */
+  margin-bottom: 20px;
+}
+
+.categories__item {
+  margin: 10px; /* Spacing between items */
+  width: calc(25% - 20px); /* Calculates width based on total columns */
+  border: 1px solid #ddd;
+  border-radius: 4px; /* Rounded corners */
+  padding: 15px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.item__foto img.thumbnail {
+  width: 100%; /* Ensures image fills the container */
+  display: block; /* Makes image fill full width */
+}
+
+.item__texto {
+  margin-top: 10px;
+}
+
+.id,
+.category,
+.brand,
+.title,
+.price,
+.stock {
+  margin-bottom: 5px;
+  font-weight: bold; /* Bold text for product details */
+}
+
+.btn-primary {
+  display: block; /* Makes the button fill the full width */
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer; /* Changes cursor to a hand on hover */
+}
+
+.btn-primary:hover {
+  background-color: #0069d9; /* Darkens the button on hover */
+}
+
+/* Pagination and sorting styles */
+.listadoInfoProducts {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.listadoInfoProducts p {
+  margin-bottom: 0;
+}
+
+.listadoInfoProducts a {
+  margin-right: 10px;
+  text-decoration: none;
+  color: #007bff;
+}
+
+/* You can add additional styles for hover effects, etc. */
+/* Estilos para los enlaces (anclas) */
+a {
+  color: #007bff; /* Cambia el color del texto del enlace */
+  width: 20%;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Estilos para los enlaces al pasar el ratón por encima */
+a:hover {
+  text-decoration: underline; /* Agrega un subrayado al pasar el ratón */
+  color: #0056b3; /* Cambia el color del texto al pasar el ratón */
+}

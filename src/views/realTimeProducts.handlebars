@@ -1,12 +1,21 @@
-<div class="contenedor">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../public/css/realTimeProducts.css">
+  <title>Panel de administracion</title>
+</head>
+<body>
+  <div class="contenedor">
   <h1 class="titulo titulo-principal">Panel de Administración</h1>
     <form action="/realtimeproducts" method="POST" enctype="multipart/form-data" class="ingresoProductos" id="form">
       <div class="ingresoProductos__contenedor">
   
         <div class="contenedor__texto">
-          <input type="text" name="code" id="code" placeholder="Code" required />
+       
           <input type="text" name="category" id="category" placeholder="Category" required />
-          <input type="text" name="title" id="title" placeholder="Title" required />
+          <input type="text" name="name" id="name" placeholder="Name" required />
           <input type="text" name="file" id="file" class="file" placeholder="Image" required />
           <input type="number" name="price" id="price" step="10" placeholder="Price" required />
           <input type="number" name="stock" id="stock" step="1" placeholder="Stock" required />
@@ -34,6 +43,8 @@
    
     </tbody>
   </table>
+    <a href="/" class="btn btn-primary">Volver a inicio</a>
 </div> 
-
 <script src="/socket.io/socket.io.js"></script>
+</body>
+</html>

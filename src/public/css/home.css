@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  
+  .main_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Ajusta la altura al tamaño de la viewport */
+  }
+  
+  .home_title {
+    margin-top: 50px;
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .home_navbar {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color:blue;
+    color: white;
+    cursor: pointer;
+    margin: 10px;
+  }
+  

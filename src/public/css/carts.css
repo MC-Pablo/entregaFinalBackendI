@@ -1,0 +1,53 @@
+/* Basic styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Carts section */
+section {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Carts title */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Carts list */
+article {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+}
+
+/* Cart details */
+.cart-details {
+  margin-bottom: 10px;
+}
+
+/* Product details within cart */
+.product-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+/* Back to Home button */
+.btn.btn-primary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  background-color: blue;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+
+  margin-top: 20px;
+  text-align: center;
+  margin: 0 auto;
+}

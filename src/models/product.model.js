@@ -1,71 +1,38 @@
 import { Schema, model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 
-const productSchema = new Schema({
- 
-  name: {
-    type: String,
-    required: true,
-    maxLength: 255,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  brand: {
-    type: String,
-    required: true,
-    maxLength: 255,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-    enum: [
-      "cremas hidratantes",
-      "jabones",
-      "protectores solares",
-    ],
-  },
-  thumbnail: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  stock: {
-    type: Boolean,
-    required: true,
-  },
+const productCollection = "products";
 
-}, {
-    timestamps: true, // Añade timestamps para generar createdAt y updatedAt
-},
-{toJSON: { virtuals: true }});
+const productSchema = new Schema(
+  {
+    category: {
+      type: String,
+      required: true,
+      uppercase: true,
+      trim: true,
+      index: { name: "idx_category" },
+    },
+    name: {
+      type: String,
+      required: true,
+      uppercase: true,
+      trim: true,
+      index: { name: "idx_title" },
+    },
+    description: { type: String, lowercase: true, required: true, trim: true },
+    price: { type: Number, required: true },
+    thumbnail: { type: Array, required: true },
+    stock: { type: Number, required: true },
+    brand: {type: String, require:true}
+  },
+  {
+    versionKey: false,
+    toJSON: { virtuals: false },
+    toObject: { virtuals: false },
+  }
+);
 
-
-productSchema.virtual("carts", {
-  ref: "carts", // Nombre de la collection externa
-  localField: "_id", // Nombre del campo de referencia que esta en esta collection
-  foreignField: "products", // Nombre del campo de referencia que está en la collection externa
-  justOne: false,
-});
-
-productSchema.pre("findByIdAndDelete", async function(next) {
-  const cartModel = this.model("cart");
-
-  await cartModel.updateMany(
-      { carts: this._id },
-      { $pull: { carts: this._id } },
-  );
-
-  next();
-});
-
+productSchema.index({ category: 1, title: 1 }, { name: "idx_category_title" });
 productSchema.plugin(paginate);
-
-
-const ProductModel = model("products", productSchema);
+const ProductModel = model(productCollection, productSchema);
 export default ProductModel;

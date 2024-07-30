@@ -2,80 +2,54 @@ import ProductModel from "../models/product.model.js";
 import mongoDB from "../config/mongoose.config.js";
 
 export default class ProductManager {
-  #itemModel;
+  #productModel;
 
   constructor() {
-    this.#itemModel = ProductModel;
+    this.#productModel = ProductModel;
   }
 
   getAll = async (paramFilters) => {
     try {
-      const $and = [];
-
-      if (paramFilters?.category)
-        $and.push({ category: paramFilters.category });
-      if (paramFilters?.title) $and.push({ title: paramFilters.title });
-      if (paramFilters?.code) $and.push({ code: paramFilters.code });
-      if (paramFilters?.available)
-        $and.push({ available: paramFilters.available });
-
-      const filters = $and.length > 0 ? { $and } : {};
-
-      let sort = {};
-      if (
-        paramFilters?.sort &&
-        (paramFilters.sort === "asc" || paramFilters.sort === "desc")
-      ) {
-        sort = {
-          price: paramFilters.sort === "desc" ? -1 : 1,
-        };
-      }
-
-      const defaultLimit = 10;
-      const defaultPage = 1;
-
-      const skip =
-        (paramFilters?.page
-          ? parseInt(paramFilters.page) - 1
-          : defaultPage - 1) *
-        (paramFilters?.limit ? parseInt(paramFilters.limit) : defaultLimit);
-
-      const paginationOptions = {
-        limit: paramFilters?.limit
-          ? parseInt(paramFilters.limit)
-          : defaultLimit,
-        page: paramFilters?.page ? parseInt(paramFilters.page) : defaultPage,
-        sort: sort,
-        skip: skip,
-        lean: true,
+      const categoryFilter = () => {
+        if (paramFilters.categories) {
+          const categoryIds = paramFilters.categories
+            .split(",")
+            .map((id) => new mongoose.Types.ObjectId(id.trim()));
+          return { categories: { $in: categoryIds } };
+        } else {
+          return {};
+        }
       };
 
-      const productsFound = await this.#itemModel.paginate(
-        filters,
+      const filter = categoryFilter();
+
+      const sort = {
+        asc: { name: 1 },
+        desc: { name: -1 },
+      };
+
+      const paginationOptions = {
+        limit: paramFilters.limit ?? 10,
+        page: paramFilters.page ?? 1,
+        sort: sort[paramFilters?.sort] ?? {},
+        lean: true,
+      };
+      const productsFound = await this.#productModel.paginate(
+        filter,
         paginationOptions
       );
-
-      // Remove the 'id' field from each product in the results
-      productsFound.docs = productsFound.docs.map((product) => {
-        const { id, ...productWithoutId } = product;
-        console.log(id);
-        return productWithoutId;
-      });
-
-      return { productsFound, skip };
+      return productsFound;
     } catch (error) {
-      console.log(error.message);
-      return "Hubo un error al obtener los productos";
+      throw new Error(error.message);
     }
   };
-  
 
   getOneById = async (id) => {
-    if (!mongoDB.isValidId(id)) {
+    if (!mongoDB.isValidID(id)) {
       return null;
     }
     try {
-      const product = await this.#itemModel.findById(id);
+      const product = await this.#productModel.findById(id).lean();
       if (!product) {
         return null;
       }
@@ -87,11 +61,11 @@ export default class ProductManager {
   };
 
   deleteOneById = async (id) => {
-    if (!mongoDB.isValidId(id)) {
+    if (!mongoDB.isValidID(id)) {
       return null;
     }
     try {
-      await this.#itemModel.findByIdAndDelete(id);
+      await this.#productModel.findByIdAndDelete(id);
       return "Producto Eliminado";
     } catch (error) {
       console.log(error.message);
@@ -106,24 +80,22 @@ export default class ProductManager {
     price,
     thumbnail = [],
     stock,
+    brand,
   }) => {
     if (!category || !name || !description || !price || !stock) {
       console.log("Todos los campos son obligatorios");
     }
-    const products = await this.#itemModel.find().lean();
+    const products = await this.#productModel.find().lean();
     try {
-      const product = new this.#itemModel({
+      const product = new this.#productModel({
         category,
         name,
         description,
         price,
         thumbnail,
         stock,
+        brand,
       });
-      const sameCode = products.find((product) => product.code === code);
-      if (sameCode) {
-        return "El codigo ya existe";
-      }
       await product.save();
       return "Producto agregado correctamente";
     } catch (error) {
@@ -131,25 +103,21 @@ export default class ProductManager {
       return "Hubo un error al agregar el producto";
     }
   };
-
-  updateProduct = async (id, updateData) => {
-    if (!mongoDB.isValidId(id)) {
-      return null;
+  updateProduct = async ( id, updateData ) => {
+    if (!mongoDB.isValidID(id)) {
+        return null;
     }
     try {
-      const updatedProduct = await this.#itemModel.findByIdAndUpdate(
-        id,
-        updateData,
-        { new: true }
-      );
-      if (updatedProduct) {
-        return "Producto Modificado";
-      } else {
-        return "Producto no encontrado";
-      }
+        const updatedProduct = await this.#productModel.findByIdAndUpdate(id, updateData, { new: true });
+        if (updatedProduct) {
+            return "Producto Modificado";
+        } else {
+            return "Producto no encontrado";
+        }
     } catch (error) {
-      console.log(error.message);
-      return "Hubo un error al actualizar el producto";
+        console.log(error.message);
+        return "Hubo un error al actualizar el producto";
     }
-  };
+};
+ 
 }

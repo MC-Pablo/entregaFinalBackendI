@@ -1,0 +1,138 @@
+/* Basic styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    
+  }
+  
+  .contenedor {
+
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Title */
+  .titulo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .titulo-principal {
+    font-size: 24px;
+  }
+  
+  /* Form */
+  .ingresoProductos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .ingresoProductos__contenedor {
+    width: 60%;
+  }
+  
+  .contenedor__texto input[type="text"],
+  .contenedor__texto input[type="number"],
+  .contenedor__texto input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .contenedor__button {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .contenedor__button input[type="submit"],
+  .contenedor__button input[type="reset"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .limpiar {
+    background-color: #ddd;
+    color: #333;
+  }
+  
+  .guardar {
+    background-color:blue;
+    color: white;
+  }
+  
+  /* Table */
+  .contenedor__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .table__categories tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .categories__list th {
+    text-align: center;
+  }
+  
+  /* Edit and Delete buttons (assuming they are within table cells) */
+  .edit,
+  .delete {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .edit {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .delete {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  /* Back to Home button */
+  .btn.btn-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+  }
+  
+  a {
+    color: #007bff; /* Cambia el color del texto del enlace */
+    width: 20%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  /* Estilos para los enlaces al pasar el ratón por encima */
+  a:hover {
+    text-decoration: underline; /* Agrega un subrayado al pasar el ratón */
+    color: #0056b3; /* Cambia el color del texto al pasar el ratón */
+  }
+  

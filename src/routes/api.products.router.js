@@ -44,7 +44,7 @@ apiProductsRouter.delete("/:id", async (req, res) => {
 
 apiProductsRouter.post("/", async (req, res) => {
   try {
-    const { category, name, description, price, thumbnail, stock } = req.body;
+    const { category, name, description, price, thumbnail, stock, brand } = req.body;
     const product = await apiProductsManager.addProduct({
       category,
       name,
@@ -52,6 +52,7 @@ apiProductsRouter.post("/", async (req, res) => {
       price,
       thumbnail,
       stock,
+      brand,
     });
     res.status(201).json({ status: true, payload: product });
   } catch (error) {
@@ -65,8 +66,8 @@ apiProductsRouter.post("/", async (req, res) => {
 apiProductsRouter.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const { category, name, description, price, thumbnail, stock } = req.body;
-    const updateData = { category, name, description, price, thumbnail, stock };
+    const { category, name, description, price, thumbnail, stock, brand } = req.body;
+    const updateData = { category, name, description, price, thumbnail, stock, brand };
     const productUpdated = await apiProductsManager.updateProduct(
       id,
       updateData

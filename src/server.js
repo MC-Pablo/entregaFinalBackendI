@@ -2,8 +2,6 @@ import express from "express";
 import paths from "./utils/paths.js";
 import mongoDB from "./config/mongoose.config.js";
 import handlebars from "./config/handlebars.config.js";
-import appUsersRouter from "./routes/app.users.router.js";
-import apiUsersRouter from "./routes/api.users.router.js";
 import appProductsRouter from "./routes/app.products.js";
 import apiProductsRouter from "./routes/api.products.router.js";
 import homeRouter from "./routes/home.router.js";
@@ -25,8 +23,6 @@ server.use("/public", express.static(paths.public));
 
 // Definición de enrutadores
 server.use("/", homeRouter);
-server.use("/users", appUsersRouter);
-server.use("/api/users", apiUsersRouter);
 server.use("/products", appProductsRouter);
 server.use("/api/products", apiProductsRouter);
 server.use("/carts", appCartRouter);
