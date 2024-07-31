@@ -5,7 +5,7 @@ const SOCKET = io();
 const FORM = document.getElementById("form");
 
 // esto es para escuchar un mensaje
-SOCKET.on("connect", () => {
+SOCKET.on("connection", () => {
   console.log("Conectado al Server");
 });
 

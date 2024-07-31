@@ -13,13 +13,12 @@
       <article>
         <div>
           <div >Id del carrito: {{this._id}}</div>
-          {{#each carts.products}}
-            <div >Id del producto: {{this.id._id}}</div>
+          {{#each this.products}}
+            <div >Id del producto: {{this.product._id}}</div>
             <div >Cantidad: {{this.quantity}}</div>
           {{/each}}
         </div>
       </article>
-        
     {{/each}}
   </div>
   <a href="/" class="btn btn-primary">Volver a inicio</a>

@@ -26,7 +26,7 @@ export default class CartManager {
   };
   getCarts = async () => {
     try {
-      const carts = await this.#cartModel.find().lean();
+      const carts = await this.#cartModel.find().populate("products.product").lean();
       return carts;
     } catch (error) {
       throw new Error(error.message);

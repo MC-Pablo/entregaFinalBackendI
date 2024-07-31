@@ -10,6 +10,7 @@ appCartRouter.get("/", async (req, res) => {
         if (!allCarts) {
             return res.status(404).send("Carritos no encontrados");
         }
+        console.log(allCarts[0].products);
         res.status(200).render("carts", { title: "Carts", carts: allCarts });
     } catch (error) {
         res.status(500).send(error.message);
@@ -25,6 +26,7 @@ appCartRouter.get("/:id", async (req, res) => {
         if (!cart) {
             return res.status(404).send("Carrito no encontrado");
         }
+        
         res.status(200).render("cartDetail", { title: "Cart Detail", cart: cart });
     } catch (error) {
         console.log(error.message);

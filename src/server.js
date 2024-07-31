@@ -8,6 +8,7 @@ import homeRouter from "./routes/home.router.js";
 import appCartRouter from "./routes/app.cart.router.js";
 import apiCartRouter from "./routes/api.cart.router.js";
 import { ERROR_SERVER, ERROR_NOT_FOUND_URL } from "./constants/messages.constant.js";
+import socketConfig from "./config/socket.config.js";
 
 const server = express();
 const PORT = 8080;
@@ -41,7 +42,10 @@ server.use((error, req, res) => {
 });
 
 // Método oyente de solicitudes
-server.listen(PORT, () => {
-    console.log(`Ejecutándose en http://${HOST}:${PORT}`);
-    mongoDB.connectDB();
-});
+const serverHTTP = server.listen(PORT, (req,res) => {
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
+    console.log(`URL: http://localhost:${PORT}`);
+    mongoDB.connectDB()
+})
+
+socketConfig.config(serverHTTP);

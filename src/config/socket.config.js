@@ -7,16 +7,16 @@ const productsManager = new ProductManager();
 const socketConfig = (serverHTTP) => {
     const serverIo = new Server(serverHTTP);
     serverIo.on("connection", async (socket) => {
-        const id = socket.client.id;
-        console.log("Conexion establecida", id);
+        
+        console.log("Conexion establecida");
 
-        try {
-            const products = await productsManager.getAll();
-            socket.emit("products", products);
-        } catch (error) {
-            console.error("Error al obtener productos:", error);
-            socket.emit("productsError", { message: "Error al obtener productos" });
-        }
+        // try {
+        //     const products = await productsManager.getAll();
+        //     socket.emit("products", products);
+        // } catch (error) {
+        //     console.error("Error al obtener productos:", error);
+        //     socket.emit("productsError", { message: "Error al obtener productos" });
+        // }
 
         socket.on("add-product", async (product) => {
             console.log(product);
