@@ -6,6 +6,7 @@ import appProductsRouter from "./routes/app.products.js";
 import apiProductsRouter from "./routes/api.products.router.js";
 import homeRouter from "./routes/home.router.js";
 import appCartRouter from "./routes/app.cart.router.js";
+import apiCartRouter from "./routes/api.cart.router.js";
 import { ERROR_SERVER, ERROR_NOT_FOUND_URL } from "./constants/messages.constant.js";
 
 const server = express();
@@ -25,6 +26,7 @@ server.use("/public", express.static(paths.public));
 server.use("/", homeRouter);
 server.use("/products", appProductsRouter);
 server.use("/api/products", apiProductsRouter);
+server.use("/api/carts", apiCartRouter);
 server.use("/carts", appCartRouter);
 
 // Control de rutas inexistentes
