@@ -184,34 +184,39 @@ decreaseProductFromCart = async (cid,pid, quantity) => {
 }
 
 
-  updateCartQuantity = async (cartId, productId, quantity) => {
-    if (!mongoDB.isValidID(cartId) || !mongoDB.isValidID(productId)) {
-      return "ID no válido";
-    }
-
+updateQuantity = async (cid,pid, quantity) => {
     try {
-      const cart = await this.#cartModel.findById(cartId);
+        cid = new mongoose.Types.ObjectId(cid.trim())
+        pid = new mongoose.Types.ObjectId(pid.trim())
 
-      if (!cart) {
-        return "Carrito no encontrado";
-      }
+        if(!mongoDB.isValidID(cid)){
+            throw new Error(`${ERROR_INVALID_ID} - Cart ID`)
+        }
 
-      const productIndex = cart.products.findIndex(
-        (p) => p.id._id.toString() === productId.toString()
-      );
+        if(!mongoDB.isValidID(pid)){
+            throw new Error(`${ERROR_INVALID_ID} - Product ID`)
+        }
+        const validCart = await this.#cartModel.findById(cid)
 
-      if (productIndex !== -1) {
-        cart.products[productIndex].quantity = quantity;
-        await cart.save();
-        return "Cantidad de producto modificada";
-      } else {
-        return "Producto no encontrado en el carrito";
-      }
+        if(!validCart){
+            throw new Error(`${ERROR_NOT_FOUND_ID} - Cart ID`)
+        }
+
+        const cart = await this.#cartModel.findOneAndUpdate(
+            {_id: cid, "products.product":pid},
+            {$set: {"products.$.cantidad": quantity}},
+            {new:true}
+        ).populate('products.product').lean();
+
+        return cart;
     } catch (error) {
-      console.log(error.message);
-      return "Error al modificar la cantidad del producto en el carrito";
+        if (error instanceof mongoose.Error.ValidationError) {
+            error.message = Object.values(error.errors)[0];
+        }
+
+        throw new Error(error.message);
     }
-  };
+}
 
   deleteCartById = async (id) => {
     if (!mongoDB.isValidID(id)) {
@@ -260,20 +265,24 @@ decreaseProductFromCart = async (cid,pid, quantity) => {
     }
   };
 
-  clearCart = async (cartId) => {
-    if (!mongoDB.isValidID(cartId)) {
-      return false;
-    }
+  clearCart = async(cid) => {
     try {
-      const cart = await this.#cartModel.findById(cartId);
-      if (!cart) {
-        return false;
-      }
-      cart.products = [];
-      return await cart.save();
+        if(!mongoDB.isValidID(cid)){
+            throw new Error("id invalido")
+        }
+        const cart = await this.#cartModel.findByIdAndUpdate(cid,{products:[]})
+        if(!cart){
+            throw new Error("id error")
+        }
+        const updatedCart = await this.#cartModel.findById(cid)
+        return updatedCart
     } catch (error) {
-      console.log(error.message);
-      return "Error al eliminar los productos del carrito";
+        if (error instanceof mongoose.Error.ValidationError) {
+            error.message = Object.values(error.errors)[0];
+        }
+
+        throw new Error(error.message);
     }
-  };
+}
+
 }

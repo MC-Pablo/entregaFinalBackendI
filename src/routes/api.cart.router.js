@@ -16,27 +16,11 @@ apiCartRouter.post("/", async (req, res) => {
   }
 });
 
-apiCartRouter.post("/:cid/products/:pid", async (req, res) => {
-  try {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
-    res
-      .status(200)
-      .send(await apiCartManager.addProductToCart(cartId, productId));
-  } catch (error) {
-    console.log(error.message);
-    res
-      .status(500)
-      .json({ status: false, message: "Hubo un error en el servidor" });
-  }
-});
-
 apiCartRouter.get("/", async (req, res) => {
   try {
     const response = await apiCartManager.getCarts();
 
     res.status(200).json({ status: true, payload: response });
-
   } catch (error) {
     console.log(error.message);
     res
@@ -57,21 +41,6 @@ apiCartRouter.get("/:id", async (req, res) => {
   }
 });
 
-apiCartRouter.delete("/:cid/products/:pid", async (req, res) => {
-  try {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
-    res
-      .status(200)
-      .send(await apiCartManager.deleteProductFromCart(cartId, productId));
-  } catch (error) {
-    console.log(error.message);
-    res
-      .status(500)
-      .json({ status: false, message: "Hubo un error en el servidor" });
-  }
-});
-
 apiCartRouter.delete("/:id", async (req, res) => {
   try {
     const ID = req.params.id;
@@ -84,11 +53,15 @@ apiCartRouter.delete("/:id", async (req, res) => {
   }
 });
 
-apiCartRouter.put('/:cid/add/:pid', async (req, res) => {
-  const {cid,pid} = req.params;
+apiCartRouter.put("/:cid/addProduct/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
   try {
-      const response = await apiCartManager.addProductToCart(cid, pid, req.body.quantity);
-      res.status(200).json({status:true, payload: response})
+    const response = await apiCartManager.addProductToCart(
+      cid,
+      pid,
+      req.body.quantity
+    );
+    res.status(200).json({ status: true, payload: response });
   } catch (error) {
     console.log(error.message);
     res
@@ -97,41 +70,63 @@ apiCartRouter.put('/:cid/add/:pid', async (req, res) => {
   }
 });
 
-apiCartRouter.put('/:cid/decreaseProduct/:pid', async (req,res) => {
-  const {cid,pid} = req.params;
+apiCartRouter.put("/:cid/decreaseProduct/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
   try {
-      const response = await cartManager.decreaseProductFromCart(cid,pid,req.body.quantity)
-      res.status(200).json({status:true, payload: response})
+    const response = await apiCartManager.decreaseProductFromCart(
+      cid,
+      pid,
+      req.body.quantity
+    );
+    res.status(200).json({ status: true, payload: response });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ status: false, message: "Hubo un error en el servidor" });
-}
+    res
+      .status(500)
+      .json({ status: false, message: "Hubo un error en el servidor" });
+  }
 });
 
-apiCartRouter.put('/:cid/deleteProduct/:pid', async (req,res) => {
-  const {cid,pid} = req.params;
+apiCartRouter.put("/:cid/deleteProduct/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
   try {
-      const response = await apiCartManager.deleteProductFromCart(cid,pid,)
-      res.status(200).json({status:true, payload: response})
+    const response = await apiCartManager.deleteProductFromCart(cid, pid);
+    res.status(200).json({ status: true, payload: response });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ status: false, message: "Hubo un error en el servidor" });
-}
+    res
+      .status(500)
+      .json({ status: false, message: "Hubo un error en el servidor" });
+  }
 });
 
-
-
-apiCartRouter.put('/:cid/updateQuantity/:pid', async (req,res) => {
-  const {cid, pid} = req.params
+apiCartRouter.put("/:cid/updateQuantity/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
   try {
-      const response = await apiCartManager.updateQuantity(cid,pid,req.body.quantity)
-      res.status(200).json({status:true, payload: response})
+    const response = await apiCartManager.updateQuantity(
+      cid,
+      pid,
+      req.body.quantity
+    );
+    res.status(200).json({ status: true, payload: response });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ status: false, message: "Hubo un error en el servidor" });
-}
-})
+    res
+      .status(500)
+      .json({ status: false, message: "Hubo un error en el servidor" });
+  }
+});
 
-
+apiCartRouter.put("/clear/:cid", async (req, res) => {
+  try {
+    const response = await apiCartManager.clearCart(req.params.cid);
+    res.status(200).json({ status: true, payload: response });
+  } catch (error) {
+    console.log(error.message);
+    res
+      .status(500)
+      .json({ status: false, message: "Hubo un error en el servidor" });
+  }
+});
 
 export default apiCartRouter;
